@@ -1,6 +1,6 @@
 # primary source: https://cmake.org/cmake-tutorial/
 cmake_minimum_required(VERSION 3.6)
-project(genex)
+project(konex)
 
 if (UNIX AND NOT APPLE)
   set(CMAKE_AR "gcc-ar")
@@ -33,11 +33,11 @@ find_package(Readline REQUIRED)
 include_directories(${Readline_INCLUDE_DIRS})
 
 
-# add genexLib library
+# add konexLib library
 include_directories("${PROJECT_SOURCE_DIR}/src")
 add_subdirectory(src)
 
-# build the genex command-line interface
+# build the konex command-line interface
 add_subdirectory(cli)
 
 # testing (http://neyasystems.com/an-engineers-guide-to-unit-testing-cmake-and-boost-unit-tests/)

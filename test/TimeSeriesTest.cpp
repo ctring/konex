@@ -7,7 +7,7 @@
 
 #define TOLERANCE 1e-9
 
-using namespace genex;
+using namespace konex;
 
 struct MockData
 {
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE( time_series_out_of_range )
 {
   MockData data;
   TimeSeries ts(data.dat, 0, 0, 5);
-  BOOST_CHECK_THROW( ts[10], GenexException);
+  BOOST_CHECK_THROW( ts[10], KOnexException);
 }
 
 BOOST_AUTO_TEST_CASE( time_series_modify_data )

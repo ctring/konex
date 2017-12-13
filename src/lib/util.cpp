@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <cmath>
 
-using namespace genex;
+using namespace konex;
 
 /// Print function for debugging
 void printArray(data_t *x, int len)

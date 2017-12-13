@@ -10,7 +10,7 @@
 using std::string;
 using std::vector;
 
-namespace genex {
+namespace konex {
 
 /**
  * A struct holding general information of a dataset
@@ -43,14 +43,14 @@ struct distance_info_t
   string description;
 };
 
-class GenexAPI
+class KOnexAPI
 {
 public:
 
   /**
    *  @brief destructor
    */
-  ~GenexAPI();
+  ~KOnexAPI();
 
   /**
    *  @brief loads data from a text file to the memory
@@ -70,7 +70,7 @@ public:
    *  @param startCol columns before startCol are discarded
    *  @return an index used to refer to the just loaded dataset
    *
-   *  @throw GenexException if cannot read from the given file
+   *  @throw KOnexException if cannot read from the given file
    */
   dataset_info_t loadDataset(const string& filePath, int maxNumRow,
                              int startCol, const string& separators);
@@ -106,11 +106,6 @@ public:
    *  @return a vector of information of loaded dataset
    */
   vector<dataset_info_t> getAllDatasetInfo();
-
-  /**
-   *  @return a vector of names of available distance metrics
-   */
-  vector<distance_info_t> getAllDistanceInfo();
 
   /**
    *  @brief normalizes the dataset
@@ -202,6 +197,6 @@ private:
   int datasetCount = 0;
 };
 
-} // namespace genex
+} // namespace konex
 
 #endif // GENEX_API_H

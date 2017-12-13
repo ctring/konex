@@ -8,7 +8,7 @@
 #include "distance/Distance.hpp"
 #include "Group.hpp"
 
-using namespace genex;
+using namespace konex;
 
 struct MockDataset
 {
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE( groupable_time_series_not_grouped_exception )
   tsSet.loadData(data.test_3_10_space, 20, 0, " ");
 
   // dataset not grouped:
-  BOOST_CHECK_THROW( tsSet.getBestMatch(tsSet.getTimeSeries(0)), GenexException );
+  BOOST_CHECK_THROW( tsSet.getBestMatch(tsSet.getTimeSeries(0)), KOnexException );
 }
 
 BOOST_AUTO_TEST_CASE( basic_get_best_match )

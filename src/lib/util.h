@@ -3,7 +3,7 @@
 
 #include "TimeSeries.hpp"
 
-using namespace genex;
+using namespace konex;
 
 /// Data structure for sorting the query
 class Index

@@ -9,7 +9,7 @@
 
 using std::string;
 
-namespace genex {
+namespace konex {
 
 /**
  *  @brief a TimeSeriesSet object contains values and information of a dataset
@@ -52,7 +52,7 @@ public:
    *  @param separator a string containings possible separator characters for values
    *         in a line
    *
-   *  @throw GenexException if cannot read from the given file
+   *  @throw KOnexException if cannot read from the given file
    */
   void loadData(const string& filePath, int maxNumRow, int startCol, const string& separator);
 
@@ -93,7 +93,7 @@ public:
    *              a negative number to get the whole time series.
    * @return a sub-sequence of a time series in the dataset
    *
-   * @throw GenexException if index, start or end is not in intended range
+   * @throw KOnexException if index, start or end is not in intended range
    */
   TimeSeries getTimeSeries(int index, int start = -1, int end = -1) const;
 
@@ -157,6 +157,6 @@ private:
   bool normalized;
 };
 
-} // namespace genex
+} // namespace konex
 
 #endif // TIMESERIESSET_H

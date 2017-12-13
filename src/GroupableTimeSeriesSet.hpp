@@ -9,7 +9,7 @@
 
 #define GROUP_FILE_VERSION 1
 
-namespace genex {
+namespace konex {
 
 /**
  *  @brief a GroupableTimeSeriesSet object is a TimeSeriesSet with grouping
@@ -76,6 +76,6 @@ private:
   data_t threshold;
 };
 
-} // namespace genex
+} // namespace konex
 
 #endif // GROUPABLE_TIME_SERIES_SET_H

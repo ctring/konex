@@ -11,7 +11,7 @@
 #define max(x,y) ((x)>(y)?(x):(y))
 #define dist(x,y) ((x-y)*(x-y))
 
-using namespace genex;
+using namespace konex;
 
 /// Finding the envelop of min and max value for LB_Keogh
 /// Implementation idea is intoruduced by Danial Lemire in his paper

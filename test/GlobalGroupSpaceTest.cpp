@@ -9,7 +9,7 @@
 
 #define TOLERANCE 1e-9
 
-using namespace genex;
+using namespace konex;
 
 struct MockData
 {

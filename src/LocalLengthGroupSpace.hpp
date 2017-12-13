@@ -11,7 +11,7 @@
 
 using std::vector;
 
-namespace genex {
+namespace konex {
 
 typedef std::pair<const Group*, data_t> candidate_group_t;
 
@@ -82,6 +82,6 @@ private:
   vector<group_membership_t> memberMap;
 };
 
-} // namespace genex
+} // namespace konex
 
 #endif //LOCAL_LENGTH_GROUP_SPACE_H

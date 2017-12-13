@@ -14,7 +14,7 @@
 #define INF_TRILLION 1e20       //Pseudo Infitinte number for this code
 
 using namespace std;
-using namespace genex;
+using namespace konex;
 
 /// Finding the envelop of min and max value for LB_Keogh
 /// Implementation idea is intoruduced by Danial Lemire in his paper

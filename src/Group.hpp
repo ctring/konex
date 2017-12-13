@@ -9,7 +9,7 @@
 
 #include <fstream>
 
-namespace genex {
+namespace konex {
 
 /**
  *  In context of a group, a member is represented by the index of a whole time
@@ -169,5 +169,5 @@ private:
   TimeSeries centroid;
 };
 
-} // namespace genex
+} // namespace konex
 #endif //GROUP_HPP

@@ -11,7 +11,7 @@ using std::ifstream;
 using std::cout;
 using std::endl;
 
-namespace genex {
+namespace konex {
 
 GroupableTimeSeriesSet::~GroupableTimeSeriesSet()
 {
@@ -22,7 +22,7 @@ int GroupableTimeSeriesSet::groupAllLengths(const std::string& distance_name, da
 {
   if (!this->isLoaded())
   {
-    throw GenexException("No data to group");
+    throw KOnexException("No data to group");
   }
 
   // clear old groups
@@ -37,7 +37,7 @@ int GroupableTimeSeriesSet::groupAllLengths(const std::string& distance_name, da
     cntGroups = this->groupsAllLengthSet->groupMultiThreaded(distance_name, threshold, numThreads);    
   }
   else {
-    throw GenexException("Number of threads must be positive");    
+    throw KOnexException("Number of threads must be positive");    
   }
 
   this->threshold = threshold;
@@ -58,7 +58,7 @@ void GroupableTimeSeriesSet::reset()
 void GroupableTimeSeriesSet::saveGroups(const string& path, bool groupSizeOnly) const
 {
   if (!this->isGrouped()) {
-    throw GenexException("No group found");
+    throw KOnexException("No group found");
   }
 
   ofstream fout(path);
@@ -73,7 +73,7 @@ void GroupableTimeSeriesSet::saveGroups(const string& path, bool groupSizeOnly) 
   }
   else
   {
-    throw GenexException("Cannot open file");
+    throw KOnexException("Cannot open file");
   }
 }
 
@@ -88,15 +88,15 @@ int GroupableTimeSeriesSet::loadGroups(const string& path)
     fin >> version >> threshold >> grpItemCount >> grpItemLength;
     if (version != GROUP_FILE_VERSION)
     {
-      throw GenexException("Incompatible file version");
+      throw KOnexException("Incompatible file version");
     }
     if (grpItemCount != this->getItemCount())
     {
-      throw GenexException("Incompatible item count");
+      throw KOnexException("Incompatible item count");
     }
     if (grpItemLength != this->getItemLength())
     {
-      throw GenexException("Incompatible item length");
+      throw KOnexException("Incompatible item length");
     }
     cout << "Saved groups are compatible with the dataset" << endl;
     reset();
@@ -106,7 +106,7 @@ int GroupableTimeSeriesSet::loadGroups(const string& path)
   }
   else
   {
-    throw GenexException("Cannot open file");
+    throw KOnexException("Cannot open file");
   }
   return numberOfGroups;
 }
@@ -117,7 +117,7 @@ candidate_time_series_t GroupableTimeSeriesSet::getBestMatch(const TimeSeries& q
   {
     return this->groupsAllLengthSet->getBestMatch(query);
   }
-  throw GenexException("Dataset is not grouped");
+  throw KOnexException("Dataset is not grouped");
 }
 
 std::vector<candidate_time_series_t> GroupableTimeSeriesSet::kSim(const TimeSeries& query, int k, int h)
@@ -125,7 +125,7 @@ std::vector<candidate_time_series_t> GroupableTimeSeriesSet::kSim(const TimeSeri
   if (this->groupsAllLengthSet) //not nullptr
   {
     if (h < k) {
-      throw GenexException("Number of examined time series must be larger than "
+      throw KOnexException("Number of examined time series must be larger than "
                            "or equal to the number of time series to look for");
     }
     std::vector<candidate_time_series_t> results = this->groupsAllLengthSet->kSim(query, h);
@@ -133,8 +133,8 @@ std::vector<candidate_time_series_t> GroupableTimeSeriesSet::kSim(const TimeSeri
     results.resize(k);
     return results;
   }
-  throw GenexException("Dataset is not grouped");
+  throw KOnexException("Dataset is not grouped");
 }
 
 
-} // namespace genex
+} // namespace konex

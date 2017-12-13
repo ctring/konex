@@ -11,7 +11,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-#include "GenexAPI.hpp"
+#include "KOnexAPI.hpp"
 #include "Command.hpp"
 #include "Exception.hpp"
 #include "TimeSeries.hpp"
@@ -31,7 +31,7 @@
 
 using namespace std;
 
-genex::GenexAPI gGenexAPI;
+konex::KOnexAPI gKOnexAPI;
 bool gTimerEnabled = true;
 chrono::time_point<chrono::system_clock> __start_time, __end_time;
 
@@ -85,9 +85,9 @@ MAKE_COMMAND(LoadDataset,
     int startCol  = args.size() > 3 ? stoi(args[3]) : 0;
     string separators = args.size() > 4 ? args[4] : " ";
 
-    genex::dataset_info_t info;
+    konex::dataset_info_t info;
     
-    info = gGenexAPI.loadDataset(filePath, maxNumRow, startCol, separators);
+    info = gKOnexAPI.loadDataset(filePath, maxNumRow, startCol, separators);
 
     cout << "Dataset loaded                         " << endl
               << "  Name:        " << info.name       << endl
@@ -124,7 +124,7 @@ MAKE_COMMAND(SaveDataset,
     string filePath = args[2];
     char separator = args.size() == 4 && args[3][0] != '\n' ? args[3][0] : ' ';
   
-    gGenexAPI.saveDataset(index, filePath, separator);
+    gKOnexAPI.saveDataset(index, filePath, separator);
 
     cout << "Saved dataset " << index << " to " << filePath << endl;
 
@@ -149,7 +149,7 @@ MAKE_COMMAND(UnloadDataset,
 
     int index = stoi(args[1]);
 
-    gGenexAPI.unloadDataset(index);
+    gKOnexAPI.unloadDataset(index);
 
     cout << "Dataset " << index << " is unloaded" << endl;
     return true;
@@ -172,7 +172,7 @@ MAKE_COMMAND(List,
 
     if (args[1] == "dataset")
     {
-      vector<genex::dataset_info_t> infos = gGenexAPI.getAllDatasetInfo();
+      vector<konex::dataset_info_t> infos = gKOnexAPI.getAllDatasetInfo();
       cout << "There are " << infos.size() << " loaded datasets" << endl << endl;
       for (const auto& i : infos)
       {
@@ -180,13 +180,6 @@ MAKE_COMMAND(List,
         cout << "\t" << setw(10) << (i.isNormalized ? "Normalized" : "");
         cout << "\t" << setw(10) << (i.isGrouped ? "Grouped" : "");
         cout << endl;
-      }
-    }
-    else if (args[1] == "distance") {
-      vector<genex::distance_info_t> infos = gGenexAPI.getAllDistanceInfo();
-      for (const auto& i : infos)
-      {
-        cout << " " << setw(10) << i.name << "\t" << i.description << endl;
       }
     }
     else
@@ -262,7 +255,7 @@ MAKE_COMMAND(Distance,
     {
       distance = args[9];
     }
-    genex::data_t dist = gGenexAPI.distanceBetween(ds1, idx1, start1, end1, ds2, idx2, start2, end2, distance);
+    konex::data_t dist = gKOnexAPI.distanceBetween(ds1, idx1, start1, end1, ds2, idx2, start2, end2, distance);
     cout << distance << " distance between " << endl
          << idx1 << " [" << start1 << ", " << end1 << "] from dataset " << ds1 << endl
          << idx2 << " [" << start2 << ", " << end2 << "] from dataset " << ds2 << endl
@@ -293,7 +286,7 @@ MAKE_COMMAND(GroupDataset,
     }
 
     int index = stoi(args[1]);
-    genex::data_t threshold = stod(args[2]);
+    konex::data_t threshold = stod(args[2]);
     string distance_name = args.size() == 4 ? args[3] : "euclidean";
 
     int count = -1;
@@ -301,7 +294,7 @@ MAKE_COMMAND(GroupDataset,
     cout << "Grouping using " << maxThreads << " threads." << endl;
     
     TIME_COMMAND(
-      count = gGenexAPI.groupDataset(index, threshold, distance_name, maxThreads);
+      count = gKOnexAPI.groupDataset(index, threshold, distance_name, maxThreads);
     )
 
     cout << "Dataset " << index << " is now grouped" << endl;
@@ -332,7 +325,7 @@ MAKE_COMMAND(SaveGroup,
     int index = stoi(args[1]);
     bool groupSizeOnly = args.size() == 4 ? stoi(args[3]) : false;
 
-    gGenexAPI.saveGroup(index, args[2], groupSizeOnly);
+    gKOnexAPI.saveGroup(index, args[2], groupSizeOnly);
     cout << "Saved groups of dataset " << index << " to " << args[2] << endl;
 
     return true;
@@ -356,7 +349,7 @@ MAKE_COMMAND(LoadGroup,
 
     int index = stoi(args[1]);
 
-    int numGroups = gGenexAPI.loadGroup(index, args[2]);
+    int numGroups = gKOnexAPI.loadGroup(index, args[2]);
     cout << numGroups << " groups loaded for dataset " << index;
 
     return true;
@@ -381,7 +374,7 @@ MAKE_COMMAND(NormalizeDataset,
 
     int index = stoi(args[1]);
 
-    gGenexAPI.normalizeDataset(index);
+    gKOnexAPI.normalizeDataset(index);
 
     cout << "Dataset " << index << " is now normalized" << endl;
     return true;
@@ -403,7 +396,7 @@ MAKE_COMMAND(PAA,
     int index = stoi(args[1]);
     int blockSize = stoi(args[2]);
 
-    genex::dataset_info_t info = gGenexAPI.PAA(index, blockSize);
+    konex::dataset_info_t info = gKOnexAPI.PAA(index, blockSize);
 
     cout << "Dataset PAA-ed                     " << endl
          << "  Name:        " << info.name       << endl
@@ -442,8 +435,8 @@ MAKE_COMMAND(Match,
     }
 
     TIME_COMMAND(
-      genex::candidate_time_series_t best =
-        gGenexAPI.getBestMatch(db_index, q_index, ts_index, start, end);
+      konex::candidate_time_series_t best =
+        gKOnexAPI.getBestMatch(db_index, q_index, ts_index, start, end);
     )
 
     cout << "Best Match is timeseries " 
@@ -495,8 +488,8 @@ MAKE_COMMAND(kSim,
     }
 
     TIME_COMMAND(
-      vector<genex::candidate_time_series_t> results =
-        gGenexAPI.kSim(k, h, db_index, q_index, ts_index, start, end); 
+      vector<konex::candidate_time_series_t> results =
+        gKOnexAPI.kSim(k, h, db_index, q_index, ts_index, start, end); 
     )
 
     for (int i = 0; i < results.size(); i++)
@@ -556,8 +549,8 @@ MAKE_COMMAND(kSimRaw,
     }
 
     TIME_COMMAND(
-      std::vector<genex::candidate_time_series_t> results = 
-        gGenexAPI.kSimRaw(k, db_index, q_index, ts_index, start, end, PAABlock);
+      std::vector<konex::candidate_time_series_t> results = 
+        gKOnexAPI.kSimRaw(k, db_index, q_index, ts_index, start, end, PAABlock);
     )
 
     for (int i = 0; i < results.size(); i++)
@@ -598,7 +591,7 @@ MAKE_COMMAND(kSimRaw,
       int start = stoi(args[3]);
       int end   = stoi(args[4]);
   
-      gGenexAPI.printTS(ds, index, start, end);
+      gKOnexAPI.printTS(ds, index, start, end);
   
       return true;
     },
@@ -618,8 +611,8 @@ MAKE_COMMAND(kSimRaw,
 #define SEP ","
 string results_path = "results.txt";
 
-double computeJaccard(const vector<genex::candidate_time_series_t> &a,
-                      const vector<genex::candidate_time_series_t> &b)
+double computeJaccard(const vector<konex::candidate_time_series_t> &a,
+                      const vector<konex::candidate_time_series_t> &b)
 {
   int overlap = 0;
   for (int i = 0; i < min(a.size(), b.size()); i++) {
@@ -628,8 +621,8 @@ double computeJaccard(const vector<genex::candidate_time_series_t> &a,
   return overlap * 1.0 / (a.size() + b.size() - overlap);
 }
 
-double computeWeightedJaccard(const vector<genex::candidate_time_series_t> &a,
-                              const vector<genex::candidate_time_series_t> &b)
+double computeWeightedJaccard(const vector<konex::candidate_time_series_t> &a,
+                              const vector<konex::candidate_time_series_t> &b)
 {
   double minSum = 0;
   double maxSum = 0;
@@ -652,7 +645,7 @@ double computeWeightedJaccard(const vector<genex::candidate_time_series_t> &a,
   return minSum / maxSum;
 }
 
-void printResults(ofstream &fout, const vector<genex::candidate_time_series_t> &r)
+void printResults(ofstream &fout, const vector<konex::candidate_time_series_t> &r)
 {
   for (auto i = 0; i < r.size(); i++) {
     int end = r[i].data.getStart() + r[i].data.getLength();
@@ -695,14 +688,14 @@ MAKE_COMMAND(TestSim,
     chrono::duration<float> kSimTime;
 
     TIME_COMMAND(
-      std::vector<genex::candidate_time_series_t> rawResults =
-        gGenexAPI.kSimRaw(k, db_index, q_index, ts_index, start, end);
+      std::vector<konex::candidate_time_series_t> rawResults =
+        gKOnexAPI.kSimRaw(k, db_index, q_index, ts_index, start, end);
     )
     kSimRawTime = __end_time - __start_time;
 
     TIME_COMMAND(
-      std::vector<genex::candidate_time_series_t> rawPAAResults =
-        gGenexAPI.kSimRaw(k, db_index, q_index, ts_index, start, end, block);
+      std::vector<konex::candidate_time_series_t> rawPAAResults =
+        gKOnexAPI.kSimRaw(k, db_index, q_index, ts_index, start, end, block);
     )
     kSimRawPAATime = __end_time - __start_time;
 
@@ -717,8 +710,8 @@ MAKE_COMMAND(TestSim,
       // EXPERIMENT
       extraTimeSeries = 0;
       TIME_COMMAND(
-        std::vector<genex::candidate_time_series_t> results =
-          gGenexAPI.kSim(k, h, db_index, q_index, ts_index, start, end);
+        std::vector<konex::candidate_time_series_t> results =
+          gKOnexAPI.kSim(k, h, db_index, q_index, ts_index, start, end);
       )
       kSimTime = __end_time - __start_time;
 
@@ -959,7 +952,7 @@ int main (int argc, char *argv[])
       {
         quit = processLine(line);
       }
-      catch (genex::GenexException& e)
+      catch (konex::KOnexException& e)
       {
         cout << "Error! " << e.what() << endl;
       }

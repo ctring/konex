@@ -1,4 +1,4 @@
-#include "GenexAPI.hpp"
+#include "KOnexAPI.hpp"
 
 #include "Exception.hpp"
 #include "GroupableTimeSeriesSet.hpp"
@@ -10,21 +10,21 @@
 using std::string;
 using std::vector;
 
-namespace genex {
+namespace konex {
 
-GenexAPI::~GenexAPI()
+KOnexAPI::~KOnexAPI()
 {
   unloadAllDataset();
 }
 
-dataset_info_t GenexAPI::loadDataset(const string& filePath, int maxNumRow,
+dataset_info_t KOnexAPI::loadDataset(const string& filePath, int maxNumRow,
                                      int startCol, const string& separators)
 {
 
   auto newSet = new GroupableTimeSeriesSet();
   try {
     newSet->loadData(filePath, maxNumRow, startCol, separators);
-  } catch (GenexException& e)
+  } catch (KOnexException& e)
   {
     delete newSet;
     throw e;
@@ -51,13 +51,13 @@ dataset_info_t GenexAPI::loadDataset(const string& filePath, int maxNumRow,
   return this->getDatasetInfo(nextIndex);
 }
 
-void GenexAPI::saveDataset(int index, const string& filePath, char separator)
+void KOnexAPI::saveDataset(int index, const string& filePath, char separator)
 {
   this->_checkDatasetIndex(index);
   this->loadedDatasets[index]->saveData(filePath, separator);
 }
 
-void GenexAPI::unloadDataset(int index)
+void KOnexAPI::unloadDataset(int index)
 {
   this->_checkDatasetIndex(index);
 
@@ -70,7 +70,7 @@ void GenexAPI::unloadDataset(int index)
   this->datasetCount--;
 }
 
-void GenexAPI::unloadAllDataset()
+void KOnexAPI::unloadAllDataset()
 {
   for (auto i = 0; i < this->loadedDatasets.size(); i++)
   {
@@ -80,12 +80,12 @@ void GenexAPI::unloadAllDataset()
   this->datasetCount = 0;
 }
 
-int GenexAPI::getDatasetCount()
+int KOnexAPI::getDatasetCount()
 {
   return this->datasetCount;
 }
 
-dataset_info_t GenexAPI::getDatasetInfo(int index)
+dataset_info_t KOnexAPI::getDatasetInfo(int index)
 {
   this->_checkDatasetIndex(index);
 
@@ -98,7 +98,7 @@ dataset_info_t GenexAPI::getDatasetInfo(int index)
                         dataset->isNormalized());
 }
 
-vector<dataset_info_t> GenexAPI::getAllDatasetInfo()
+vector<dataset_info_t> KOnexAPI::getAllDatasetInfo()
 {
   vector<dataset_info_t> info;
   for (auto i = 0; i < this->loadedDatasets.size(); i++)
@@ -111,47 +111,36 @@ vector<dataset_info_t> GenexAPI::getAllDatasetInfo()
   return info;
 }
 
-vector<distance_info_t> GenexAPI::getAllDistanceInfo()
-{
-  const vector<string>& allDistanceName = getAllDistanceName();
-  vector<distance_info_t> info;
-  for (auto name : allDistanceName)
-  {
-    info.push_back(distance_info_t(name, ""));
-  }
-  return info;
-}
-
-std::pair<data_t, data_t> GenexAPI::normalizeDataset(int idx)
+std::pair<data_t, data_t> KOnexAPI::normalizeDataset(int idx)
 {
   this->_checkDatasetIndex(idx);
   return this->loadedDatasets[idx]->normalize();
 }
 
-int GenexAPI::groupDataset(int index, data_t threshold, const string& distance_name, int numThreads)
+int KOnexAPI::groupDataset(int index, data_t threshold, const string& distance_name, int numThreads)
 {
   this->_checkDatasetIndex(index);
   return this->loadedDatasets[index]->groupAllLengths(distance_name, threshold, numThreads);
 }
 
-void GenexAPI::saveGroup(int index, const string &path, bool groupSizeOnly)
+void KOnexAPI::saveGroup(int index, const string &path, bool groupSizeOnly)
 {
   this->_checkDatasetIndex(index);
   this->loadedDatasets[index]->saveGroups(path, groupSizeOnly);
 }
 
-int GenexAPI::loadGroup(int index, const string& path)
+int KOnexAPI::loadGroup(int index, const string& path)
 {
   this->_checkDatasetIndex(index);
   return this->loadedDatasets[index]->loadGroups(path);
 }
 
-void GenexAPI::setWarpingBandRatio(double ratio)
+void KOnexAPI::setWarpingBandRatio(double ratio)
 {
-  genex::setWarpingBandRatio(ratio);
+  konex::setWarpingBandRatio(ratio);
 }
 
-candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, int index, int start, int end)
+candidate_time_series_t KOnexAPI::getBestMatch(int result_idx, int query_idx, int index, int start, int end)
 {
   this->_checkDatasetIndex(result_idx);
   this->_checkDatasetIndex(query_idx);
@@ -160,7 +149,7 @@ candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, in
   return loadedDatasets[result_idx]->getBestMatch(query);
 }
 
-vector<candidate_time_series_t> GenexAPI::kSim(int k, int h, int result_idx, int query_idx, int index, int start, int end)
+vector<candidate_time_series_t> KOnexAPI::kSim(int k, int h, int result_idx, int query_idx, int index, int start, int end)
 {
   this->_checkDatasetIndex(result_idx);
   this->_checkDatasetIndex(query_idx);
@@ -169,7 +158,7 @@ vector<candidate_time_series_t> GenexAPI::kSim(int k, int h, int result_idx, int
   return loadedDatasets[result_idx]->kSim(query, k, h);
 }
 
-vector<candidate_time_series_t> GenexAPI::kSimRaw(int k, int result_idx, int query_idx, int index, int start, int end, int PAABlockSize)
+vector<candidate_time_series_t> KOnexAPI::kSimRaw(int k, int result_idx, int query_idx, int index, int start, int end, int PAABlockSize)
 {
   this->_checkDatasetIndex(result_idx);
   this->_checkDatasetIndex(query_idx);
@@ -178,14 +167,14 @@ vector<candidate_time_series_t> GenexAPI::kSimRaw(int k, int result_idx, int que
   return loadedDatasets[result_idx]->kSimRaw(query, k, PAABlockSize);
 }
 
-dataset_info_t GenexAPI::PAA(int idx, int n)
+dataset_info_t KOnexAPI::PAA(int idx, int n)
 {
   this->_checkDatasetIndex(idx);
   this->loadedDatasets[idx]->PAA(n);
   return this->getDatasetInfo(idx);
 }
 
-data_t GenexAPI::distanceBetween(int ds1, int idx1, int start1, int end1,
+data_t KOnexAPI::distanceBetween(int ds1, int idx1, int start1, int end1,
                                  int ds2, int idx2, int start2, int end2,
                                  const std::string& distance_name)
 {
@@ -197,7 +186,7 @@ data_t GenexAPI::distanceBetween(int ds1, int idx1, int start1, int end1,
   return distance(ts1, ts2, INF);
 }
 
-void GenexAPI::printTS(int ds, int idx, int start, int end)
+void KOnexAPI::printTS(int ds, int idx, int start, int end)
 {
   this->_checkDatasetIndex(ds);
   TimeSeries ts = this->loadedDatasets[ds]->getTimeSeries(idx, start, end);
@@ -205,12 +194,12 @@ void GenexAPI::printTS(int ds, int idx, int start, int end)
   std::cout << std::endl;
 }
 
-void GenexAPI::_checkDatasetIndex(int index)
+void KOnexAPI::_checkDatasetIndex(int index)
 {
   if (index < 0 || index >= loadedDatasets.size() || loadedDatasets[index] == nullptr)
   {
-    throw GenexException("There is no dataset with given index");
+    throw KOnexException("There is no dataset with given index");
   }
 }
 
-} // namespace genex
+} // namespace konex

@@ -14,7 +14,7 @@
 // EXPERIMENT
 extern int extraTimeSeries;
 
-namespace genex {
+namespace konex {
 
 #ifdef SINGLE_PRECISION
 typedef float data_t;
@@ -120,7 +120,7 @@ public:
    *  @param idx index of the value in this time series
    *  @return the value at idx
    *
-   *  @throw GenexException if the index is out of bound
+   *  @throw KOnexException if the index is out of bound
    */
   data_t& operator[](int idx) const;
 
@@ -133,7 +133,7 @@ public:
    *  @param other the other time series to be added to this one.
    *  @return the reference to this time series
    *
-   *  @throw GenexException if the other time series has different length
+   *  @throw KOnexException if the other time series has different length
    *         from this one
    */
   TimeSeries& operator+=(const TimeSeries& other);
@@ -224,6 +224,6 @@ struct candidate_time_series_t
   candidate_time_series_t() : data(0), dist(0) {}  
 };
 
-} // namespace genex
+} // namespace konex
 
 #endif // TIMESERIES_H

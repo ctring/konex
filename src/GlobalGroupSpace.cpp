@@ -26,7 +26,7 @@ using std::ofstream;
 using std::ifstream;
 using std::string;
 
-namespace genex {
+namespace konex {
 
 void GlobalGroupSpace::reset(void)
 {
@@ -41,12 +41,7 @@ void GlobalGroupSpace::_loadDistance(const string& distance_name)
 {
   this->distanceName = distance_name;
   this->pairwiseDistance = getDistance(distance_name);
-  if (distance_name == "euclidean") {
-    this->warpedDistance = cascadeDistance;
-  }
-  else {
-    this->warpedDistance = getDistance(distance_name + DTW_SUFFIX);
-  }  
+  this->warpedDistance = cascadeDistance;
 }
 
 int GlobalGroupSpace::_group(int i)
@@ -100,7 +95,7 @@ int GlobalGroupSpace::groupMultiThreaded(const std::string& distance_name, data_
 candidate_time_series_t GlobalGroupSpace::getBestMatch(const TimeSeries& query)
 {
   if (query.getLength() <= 1) {
-    throw GenexException("Length of query must be larger than 1");
+    throw KOnexException("Length of query must be larger than 1");
   }
   data_t bestSoFarDist = INF;
   const Group* bestSoFarGroup = nullptr;
@@ -242,4 +237,4 @@ vector<int> generateTraverseOrder(int queryLength, int totalLength)
   return order;
 }
 
-} // namespace genex
+} // namespace konex

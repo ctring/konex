@@ -13,7 +13,7 @@
 // EXPERIMENT
 int extraTimeSeries = 0;
 
-namespace genex {
+namespace konex {
 
 
 TimeSeries& TimeSeries::operator=(const TimeSeries& other)
@@ -66,7 +66,7 @@ TimeSeries::~TimeSeries()
 data_t& TimeSeries::operator[](int idx) const
 {
   if (idx < 0 || idx >= this->length) {
-    throw GenexException("Data point index is out of range");
+    throw KOnexException("Data point index is out of range");
   }
   return this->data[start + idx];
 }
@@ -75,7 +75,7 @@ TimeSeries& TimeSeries::operator+=(const TimeSeries& other)
 {
   if (other.getLength() != this->length)
   {
-    throw GenexException("Two time series must have the same length for addition");
+    throw KOnexException("Two time series must have the same length for addition");
   }
   for (int i = 0; i < this->length; i++)
   {
@@ -142,4 +142,4 @@ void TimeSeries::printData(std::ostream &out) const
   }
 }
 
-} // namespace genex
+} // namespace konex

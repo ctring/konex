@@ -4,15 +4,15 @@
 #include <stdexcept>
 #include <string>
 
-namespace genex {
+namespace konex {
 
-class GenexException : public std::runtime_error
+class KOnexException : public std::runtime_error
 {
 public:
-  GenexException(const char* msg) : std::runtime_error(msg) {}
-  GenexException(std::string msg) : std::runtime_error(msg.c_str()) {}
+  KOnexException(const char* msg) : std::runtime_error(msg) {}
+  KOnexException(std::string msg) : std::runtime_error(msg.c_str()) {}
 };
 
-} // namespace genex
+} // namespace konex
 
 #endif // EXCEPTION_H

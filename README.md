@@ -1,4 +1,4 @@
-# ONEX
+# K-ONEX
 
 ## Install dependencies
 

@@ -3,14 +3,13 @@
 #include <boost/test/unit_test.hpp>
 #include "LocalLengthGroupSpace.hpp"
 #include "TimeSeriesSet.hpp"
-#include "distance/Euclidean.hpp"
 #include "distance/Distance.hpp"
 #include "Exception.hpp"
 #include "Group.hpp"
 
 #define TOLERANCE 1e-9
 
-using namespace genex;
+using namespace konex;
 
 struct MockData
 {
@@ -21,7 +20,7 @@ struct MockData
 BOOST_AUTO_TEST_CASE( local_length_group_space, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
-  dist_t distance = pairwiseDistance<Euclidean, data_t>;
+  dist_t distance = pairwiseDistance;
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_group_5_10_space, 5, 0, " ");
 
@@ -36,7 +35,7 @@ BOOST_AUTO_TEST_CASE( local_length_group_space, *boost::unit_test::tolerance(TOL
 BOOST_AUTO_TEST_CASE( local_length_group_space_different, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
-  dist_t distance = pairwiseDistance<Euclidean, data_t>;
+  dist_t distance = pairwiseDistance;
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_group_5_10_different_space, 5, 0, " ");
 
@@ -51,7 +50,7 @@ BOOST_AUTO_TEST_CASE( local_length_group_space_different, *boost::unit_test::tol
 BOOST_AUTO_TEST_CASE( groups_best_group, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
-  dist_t distance = warpedDistance<Euclidean, data_t>;
+  dist_t distance = warpedDistance;
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_group_5_10_different_space, 5, 0, " ");
   

@@ -10,7 +10,7 @@
 #include <vector>
 #include <fstream>
 
-namespace genex {
+namespace konex {
 
 /**
  *  The set of all groups of equal lengths for a dataset
@@ -91,5 +91,5 @@ private:
 
 vector<int> generateTraverseOrder(int queryLength, int totalLength);
 
-} // namespace genex
+} // namespace konex
 #endif //GLOBAL_GROUP_SPACE_H

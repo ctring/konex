@@ -8,12 +8,12 @@
 #include <vector>       // std::vector
 
 #include "TimeSeries.hpp"
-#include "GenexAPI.hpp"
+#include "KOnexAPI.hpp"
 #include "Exception.hpp"
 
 #include "Group.hpp"
 
-using namespace genex;
+using namespace konex;
 
 struct MockDataset
 {
@@ -42,19 +42,19 @@ const bool containsTimeSeries(const std::vector<candidate_time_series_t> a, cons
 
 BOOST_AUTO_TEST_CASE( api_load_dataset )
 {
-  GenexAPI api;
+  KOnexAPI api;
   int id0 = api.loadDataset(data.test_10_20_space, 0, 0, " ").id;
   int id1 = api.loadDataset(data.test_15_20_comma, 10, 0, ",").id;
   BOOST_CHECK_EQUAL( id0, 0 );
   BOOST_CHECK_EQUAL( id1, 1 );
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 2 );
-  BOOST_CHECK_THROW( api.loadDataset(data.not_exist, 10, 0, " "), GenexException );
-  BOOST_CHECK_THROW( api.loadDataset(data.uneven_rows, 10, 0, " "), GenexException );
+  BOOST_CHECK_THROW( api.loadDataset(data.not_exist, 10, 0, " "), KOnexException );
+  BOOST_CHECK_THROW( api.loadDataset(data.uneven_rows, 10, 0, " "), KOnexException );
 }
 
 BOOST_AUTO_TEST_CASE( api_unload_dataset )
 {
-  GenexAPI api;
+  KOnexAPI api;
   int id0 = api.loadDataset(data.test_10_20_space, 5, 0, " ").id;
   int id1 = api.loadDataset(data.test_15_20_comma, 10, 0, ",").id;
   int id2 = api.loadDataset(data.test_10_20_space, 6, 0, " ").id;
@@ -66,8 +66,8 @@ BOOST_AUTO_TEST_CASE( api_unload_dataset )
   api.unloadDataset(0);
   api.unloadDataset(2);
 
-  BOOST_CHECK_THROW( api.unloadDataset(0), GenexException );
-  BOOST_CHECK_THROW( api.unloadDataset(2), GenexException );
+  BOOST_CHECK_THROW( api.unloadDataset(0), KOnexException );
+  BOOST_CHECK_THROW( api.unloadDataset(2), KOnexException );
 
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 1 );
 
@@ -80,20 +80,20 @@ BOOST_AUTO_TEST_CASE( api_unload_dataset )
 
 BOOST_AUTO_TEST_CASE( api_unload_all_dataset )
 {
-  GenexAPI api;
+  KOnexAPI api;
   int id0 = api.loadDataset(data.test_10_20_space, 5, 0, " ").id;
   int id1 = api.loadDataset(data.test_15_20_comma, 10, 0, ",").id;
   int id2 = api.loadDataset(data.test_10_20_space, 6, 0, " ").id;
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 3 );
 
   api.unloadAllDataset();
-  BOOST_CHECK_THROW( api.unloadDataset(0), GenexException );
+  BOOST_CHECK_THROW( api.unloadDataset(0), KOnexException );
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 0 );
 }
 
 BOOST_AUTO_TEST_CASE( api_get_dataset_info )
 {
-  GenexAPI api;
+  KOnexAPI api;
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
   api.loadDataset(data.test_15_20_comma, 10, 4, ",");
 
@@ -106,25 +106,23 @@ BOOST_AUTO_TEST_CASE( api_get_dataset_info )
   api.loadDataset(data.test_15_20_comma, 10, 0, ",");
 
   api.unloadDataset(1);
-  BOOST_CHECK_THROW( api.getDatasetInfo(1), GenexException );
+  BOOST_CHECK_THROW( api.getDatasetInfo(1), KOnexException );
 }
 
 BOOST_AUTO_TEST_CASE( api_group )
 {
-  GenexAPI api;
+  KOnexAPI api;
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
  
   int count_1 = api.groupDataset(0, 0.5, "euclidean");
-  int count_2 = api.groupDataset(0, 0.5, "chebyshev");
   BOOST_TEST( count_1 > 20 );
-  BOOST_TEST( count_2 > 20 );
-  BOOST_CHECK_THROW( api.groupDataset(1, 0.5, "euclidean"), GenexException ); // no dataset 1 loaded
-  BOOST_CHECK_THROW( api.groupDataset(0, 0.5, "oracle"), GenexException ); //no magical distance
+
+  BOOST_CHECK_THROW( api.groupDataset(1, 0.5, "euclidean"), KOnexException ); // no dataset 1 loaded
 }
 
 BOOST_AUTO_TEST_CASE( api_match )
 {
-  GenexAPI api;
+  KOnexAPI api;
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
 
@@ -140,15 +138,15 @@ BOOST_AUTO_TEST_CASE( api_match )
   BOOST_TEST(best_3.dist == 0.0);
   BOOST_TEST(best_4.dist == 0.0);
 
-  BOOST_CHECK_THROW( api.getBestMatch(1, 0, 0), GenexException ); // dataset not grouped
-  BOOST_CHECK_THROW( api.getBestMatch(1, 0, 35), GenexException ); // not that many ts in dataset
-  BOOST_CHECK_THROW( api.getBestMatch(1, 0, 1, 100, 125), GenexException ); // not that big ts in dataset
+  BOOST_CHECK_THROW( api.getBestMatch(1, 0, 0), KOnexException ); // dataset not grouped
+  BOOST_CHECK_THROW( api.getBestMatch(1, 0, 35), KOnexException ); // not that many ts in dataset
+  BOOST_CHECK_THROW( api.getBestMatch(1, 0, 1, 100, 125), KOnexException ); // not that big ts in dataset
 }
 
 
 BOOST_AUTO_TEST_CASE( api_knn_k_1 )
 {
-  GenexAPI api;
+  KOnexAPI api;
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
 
@@ -174,14 +172,14 @@ BOOST_AUTO_TEST_CASE( api_knn_k_1 )
   BOOST_TEST(timeSeriesEqual(best_3[0].data, expected_3.data));
   BOOST_TEST(timeSeriesEqual(best_4[0].data, expected_4.data));
   
-  BOOST_CHECK_THROW( api.kSim(1, 1, 1, 0, 0), GenexException ); // dataset not grouped
-  BOOST_CHECK_THROW( api.kSim(1, 1, 1, 0, 35), GenexException ); // not that many ts in dataset
-  BOOST_CHECK_THROW( api.kSim(1, 1, 1, 0, 1, 100, 125), GenexException ); // not that big ts in dataset
+  BOOST_CHECK_THROW( api.kSim(1, 1, 1, 0, 0), KOnexException ); // dataset not grouped
+  BOOST_CHECK_THROW( api.kSim(1, 1, 1, 0, 35), KOnexException ); // not that many ts in dataset
+  BOOST_CHECK_THROW( api.kSim(1, 1, 1, 0, 1, 100, 125), KOnexException ); // not that big ts in dataset
 }
 
 BOOST_AUTO_TEST_CASE( api_knn_k_2 )
 {
-  GenexAPI api;
+  KOnexAPI api;
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
 
@@ -210,7 +208,7 @@ BOOST_AUTO_TEST_CASE( api_knn_k_2 )
 
 BOOST_AUTO_TEST_CASE( api_knn_k_4 )
 {
-  GenexAPI api;
+  KOnexAPI api;
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
   
@@ -241,7 +239,7 @@ BOOST_AUTO_TEST_CASE( api_knn_k_4 )
 
 BOOST_AUTO_TEST_CASE( api_kx_k_1 )
 {
-  GenexAPI api;
+  KOnexAPI api;
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
   
@@ -270,7 +268,7 @@ BOOST_AUTO_TEST_CASE( api_kx_k_1 )
 
  BOOST_AUTO_TEST_CASE( api_kx_k_4 )
  {
-   GenexAPI api;
+   KOnexAPI api;
    api.loadDataset(data.test_10_20_space, 5, 0, " ");
    api.loadDataset(data.test_10_20_space, 5, 0, " ");
    

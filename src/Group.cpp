@@ -13,7 +13,7 @@ using std::ofstream;
 using std::ifstream;
 using std::endl;
 
-namespace genex {
+namespace konex {
 
 void Group::addMember(int tsIndex, int tsStart)
 {
@@ -166,4 +166,4 @@ void Group::loadGroup(ifstream &fin)
   }
 }
 
-} // namespace genex
+} // namespace konex

@@ -14,7 +14,7 @@ using std::string;
 using std::cout;
 using std::endl;
 
-namespace genex {
+namespace konex {
 
 TimeSeriesSet::~TimeSeriesSet()
 {
@@ -82,7 +82,7 @@ void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
   if (!f.is_open())
   {
     f.close();
-    throw GenexException(string("Cannot open ") + filePath);
+    throw KOnexException(string("Cannot open ") + filePath);
   }
 
   if (maxNumRow <= 0) {
@@ -119,7 +119,7 @@ void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
       {
         f.close();
         this->clearData();
-        throw GenexException("File contains time series with inconsistent lengths");
+        throw KOnexException("File contains time series with inconsistent lengths");
       }
 
       int col = 0;
@@ -137,13 +137,13 @@ void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
           {
             f.close();
             this->clearData();
-            throw GenexException("Dataset file contains unparsable text");
+            throw KOnexException("Dataset file contains unparsable text");
           }
           catch (const std::out_of_range& e)
           {
             f.close();
             this->clearData();
-            throw GenexException("Values are out of range");
+            throw KOnexException("Values are out of range");
           }
         }
       }
@@ -157,7 +157,7 @@ void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
   {
     f.close();
     this->clearData();
-    throw GenexException("Error while reading file");
+    throw KOnexException("Error while reading file");
   }
 
   this->itemLength = length - startCol;
@@ -172,7 +172,7 @@ void TimeSeriesSet::saveData(const string& filePath, char separator) const
   if (!f.is_open())
   {
     f.close();
-    throw GenexException(string("Cannot open ") + filePath);
+    throw KOnexException(string("Cannot open ") + filePath);
   }
   for (int i = 0; i < itemCount; i++) {
     for (int j = 0; j < itemLength; j++) {
@@ -195,7 +195,7 @@ TimeSeries TimeSeriesSet::getTimeSeries(int index, int start, int end) const
 {
   if (index < 0 || index >= this->itemCount)
   {
-    throw GenexException("Invalid time series index");
+    throw KOnexException("Invalid time series index");
   }
   if (start < 0 && end < 0)
   {
@@ -203,7 +203,7 @@ TimeSeries TimeSeriesSet::getTimeSeries(int index, int start, int end) const
   }
   if (start < 0 || start >= end || end > this->itemLength)
   {
-    throw GenexException("Invalid starting or ending position of a time series");
+    throw KOnexException("Invalid starting or ending position of a time series");
   }
   return TimeSeries(this->data + index * this->itemLength, index, start, end);
 }
@@ -214,7 +214,7 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
 
   if (!length)
   {
-    throw GenexException("No data to normalize");
+    throw KOnexException("No data to normalize");
   }
 
   // auto minAndMax = std::minmax(this->data);
@@ -297,7 +297,7 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
 void TimeSeriesSet::PAA(int n)
 {
   if (n <= 0) {
-    throw GenexException("Block size must be positive");
+    throw KOnexException("Block size must be positive");
   }
   int newItemLength = calcPAALength(this->itemLength, n);
   auto new_data = new data_t[this->itemCount * newItemLength];
@@ -320,11 +320,10 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
   const TimeSeries& query, int k, int PAABlock)
 {
   if (k <= 0) {
-    throw GenexException("K must be positive");
+    throw KOnexException("K must be positive");
   }
   std::vector<candidate_time_series_t> bestSoFar;
-  const std::string& distance_name = "euclidean";
-  dist_t warpedDistance = getDistance(distance_name + DTW_SUFFIX);
+  dist_t warpedDistance = cascadeDistance;
   data_t bestSoFarDist, currentDist;
   int timeSeriesLength = getItemLength();
   int numberTimeSeries = getItemCount();
@@ -396,4 +395,4 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
   return bestSoFar;
 }
 
-} // namespace genex
+} // namespace konex

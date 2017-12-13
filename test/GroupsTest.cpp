@@ -2,14 +2,13 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "distance/Euclidean.hpp"
 #include "distance/Distance.hpp"
 #include "Exception.hpp"
 #include "Group.hpp"
 
 #define TOLERANCE 1e-9
 
-using namespace genex;
+using namespace konex;
 
 struct MockData
 {
@@ -78,7 +77,7 @@ BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(TOLERANCE) )
 BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
-  dist_t distance = warpedDistance<Euclidean, data_t>;
+  dist_t distance = warpedDistance;
 
   int timeSeriesCount = 3;
   int timeSeriesLengths = 10;

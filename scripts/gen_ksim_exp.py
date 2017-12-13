@@ -33,7 +33,7 @@ if __name__ == '__main__':
     parser.add_argument('length', type=int, help='length of each item in the dataset.')
     parser.add_argument('ds_path', help='path to the dataset used in the experiment')
     parser.add_argument('st', type=float, help='similarity threshold for the experiment')
-    parser.add_argument('exp_path', help='path to the GENEX experiment script')
+    parser.add_argument('exp_path', help='path to the K-ONEX experiment script')
     parser.add_argument('exp_result_path', help='path for the result file')
     parser.add_argument('-k', nargs='+',
                         help='number of similar time series to look for.'

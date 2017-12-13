@@ -21,7 +21,7 @@ using namespace std::chrono;
 #define LOG_EVERY_S 10
 #define LOG_FREQ  5
 
-namespace genex {
+namespace konex {
 
 LocalLengthGroupSpace::LocalLengthGroupSpace(const TimeSeriesSet& dataset, int length)
  : dataset(dataset), length(length)
@@ -112,7 +112,7 @@ int LocalLengthGroupSpace::getNumberOfGroups(void) const
 const Group* LocalLengthGroupSpace::getGroup(int idx) const
 {
   if (idx < 0 || idx >= this->getNumberOfGroups()) {
-    throw GenexException("Group index is out of range");
+    throw KOnexException("Group index is out of range");
   }
   return this->groups[idx];
 }
@@ -207,4 +207,4 @@ int LocalLengthGroupSpace::interLevelKSim(const TimeSeries& query,
   return k;
 }
 
-} // namespace genex
+} // namespace konex

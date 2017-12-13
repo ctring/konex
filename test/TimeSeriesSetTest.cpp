@@ -5,13 +5,12 @@
 #include "TimeSeriesSet.hpp"
 #include "Exception.hpp"
 #include "TimeSeries.hpp"
-#include "distance/Euclidean.hpp"
 
 #include <iostream>
 
 #define TOLERANCE 1e-9
 
-using namespace genex;
+using namespace konex;
 
 struct MockDataset
 {
@@ -61,25 +60,25 @@ BOOST_AUTO_TEST_CASE( time_series_set_load_comma, *boost::unit_test::tolerance(T
 BOOST_AUTO_TEST_CASE( time_series_set_load_file_not_exist )
 {
   TimeSeriesSet tsSet;
-  BOOST_CHECK_THROW(tsSet.loadData(data.not_exist, 0, 0, " "), GenexException);
+  BOOST_CHECK_THROW(tsSet.loadData(data.not_exist, 0, 0, " "), KOnexException);
 }
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_uneven_rows )
 {
   TimeSeriesSet tsSet;
-  BOOST_CHECK_THROW(tsSet.loadData(data.uneven_rows, 10, 0, " "), GenexException);
+  BOOST_CHECK_THROW(tsSet.loadData(data.uneven_rows, 10, 0, " "), KOnexException);
 }
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_text_only )
 {
   TimeSeriesSet tsSet;
-  BOOST_CHECK_THROW(tsSet.loadData(data.text_only, 10, 0, " "), GenexException);
+  BOOST_CHECK_THROW(tsSet.loadData(data.text_only, 10, 0, " "), KOnexException);
 }
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_very_big_value )
 {
   TimeSeriesSet tsSet;
-  BOOST_CHECK_THROW(tsSet.loadData(data.very_big, 0, 0, " "), GenexException);
+  BOOST_CHECK_THROW(tsSet.loadData(data.very_big, 0, 0, " "), KOnexException);
 }
 
 BOOST_AUTO_TEST_CASE( timeseries_set_load_all )
@@ -101,7 +100,7 @@ BOOST_AUTO_TEST_CASE( time_series_set_get_sub_time_series, *boost::unit_test::to
   BOOST_CHECK_EQUAL( ts.getLength(), 5);
   BOOST_TEST( ts[0] == 2.656250000);
   BOOST_TEST( ts[4] == 3.822265625);
-  BOOST_CHECK_THROW( ts[5], GenexException );
+  BOOST_CHECK_THROW( ts[5], KOnexException );
 }
 
 BOOST_AUTO_TEST_CASE( time_series_set_get_invalid_sub_time_series)
@@ -109,12 +108,12 @@ BOOST_AUTO_TEST_CASE( time_series_set_get_invalid_sub_time_series)
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_10_20_space, 20, 0, " ");
 
-  BOOST_CHECK_THROW( tsSet.getTimeSeries(100), GenexException );        // index exceeds number of time series
-  BOOST_CHECK_THROW( tsSet.getTimeSeries(-2), GenexException );         // negative index
-  BOOST_CHECK_THROW( tsSet.getTimeSeries(0, -1, 10), GenexException );  // negative starting position
-  BOOST_CHECK_THROW( tsSet.getTimeSeries(0, 0, 100), GenexException );  // ending position exceeds time series length
-  BOOST_CHECK_THROW( tsSet.getTimeSeries(0, 11, 10), GenexException );  // starting position is larger than ending position
-  BOOST_CHECK_THROW( tsSet.getTimeSeries(0, 10, 10), GenexException );  // starting position is equal to ending position
+  BOOST_CHECK_THROW( tsSet.getTimeSeries(100), KOnexException );        // index exceeds number of time series
+  BOOST_CHECK_THROW( tsSet.getTimeSeries(-2), KOnexException );         // negative index
+  BOOST_CHECK_THROW( tsSet.getTimeSeries(0, -1, 10), KOnexException );  // negative starting position
+  BOOST_CHECK_THROW( tsSet.getTimeSeries(0, 0, 100), KOnexException );  // ending position exceeds time series length
+  BOOST_CHECK_THROW( tsSet.getTimeSeries(0, 11, 10), KOnexException );  // starting position is larger than ending position
+  BOOST_CHECK_THROW( tsSet.getTimeSeries(0, 10, 10), KOnexException );  // starting position is equal to ending position
 }
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_omit_rows_and_columns )
@@ -169,7 +168,7 @@ BOOST_AUTO_TEST_CASE( normalize_2, *boost::unit_test::tolerance(TOLERANCE) )
 BOOST_AUTO_TEST_CASE( normalize_exception )
 {
   TimeSeriesSet tsSet;
-  BOOST_CHECK_THROW(tsSet.normalize(), GenexException); // no data to normalize
+  BOOST_CHECK_THROW(tsSet.normalize(), KOnexException); // no data to normalize
 }
 
 BOOST_AUTO_TEST_CASE( PAA, *boost::unit_test::tolerance(TOLERANCE)  )
